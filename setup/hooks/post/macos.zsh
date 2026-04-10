@@ -44,8 +44,10 @@ chmod +x ~/.config/sketchybar/plugins/*.sh 2>/dev/null || true
 
 echo "# # Configuring JankyBorders"
 mkdir -p ~/.config/borders
-cp "$YADR_DIR/workstation/macos/borders/bordersrc" ~/.config/borders/bordersrc
-chmod +x ~/.config/borders/bordersrc
+if [[ -f "$YADR_DIR/workstation/macos/borders/bordersrc" ]]; then
+  ln -sf "$YADR_DIR/workstation/macos/borders/bordersrc" ~/.config/borders/bordersrc
+  chmod +x ~/.config/borders/bordersrc 2>/dev/null || true
+fi
 
 echo "# # Setting up SeaShells theme system"
 mkdir -p ~/.config/themes
@@ -112,7 +114,4 @@ if command -v aerospace &>/dev/null; then
 fi
 if command -v sketchybar &>/dev/null; then
   brew services start sketchybar
-fi
-if command -v borders &>/dev/null; then
-  brew services start borders
 fi
