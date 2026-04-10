@@ -97,7 +97,7 @@ detect_files = ["package.json", ".node-version", ".nvmrc"]
 
 [python]
 symbol = " "
-format = "[${symbol}${pyenv_prefix}${version}(\($virtualenv\))]($style) "
+format = '[${symbol}${pyenv_prefix}${version}(\($virtualenv\))]($style) '
 style = "yellow"
 
 [golang]
