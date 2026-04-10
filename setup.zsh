@@ -50,15 +50,17 @@ for arg in "$@"; do
       FEATURES+=("dynamic-font")
       YADR_DYNAMIC_FONTS+=("${arg#--with-font-}")
       ;;
+    --with-tiling-wm)
+      FEATURES+=("tiling-wm")
+      ;;
     --with-*) FEATURES+=("${arg#--with-}") ;;
     setup|help) ;;
     *)
-      # Alias backward compatibility for `setup tools`, `setup macos`, `setup keyboard`
+      # Alias backward compatibility
       if [[ "$arg" != -* ]]; then
-        if [[ "$arg" == "macos" ]]; then OS_OVERRIDE="Darwin"; fi
-        if [[ "$arg" == "omarchy" ]]; then OS_OVERRIDE="Linux"; FEATURES+=("omarchy"); fi
-        if [[ "$arg" == "linux" ]]; then OS_OVERRIDE="Linux"; fi
-        if [[ "$arg" == "tools" ]]; then FEATURES+=("tools"); fi
+        if [[ "$arg" == "macos" ]]; then OS_OVERRIDE="Darwin"; FEATURES+=("macos" "tiling-wm"); fi
+        if [[ "$arg" == "omarchy" || "$arg" == "linux" ]]; then OS_OVERRIDE="Linux"; FEATURES+=("linux" "tiling-wm"); fi
+        if [[ "$arg" == "tools" ]]; then FEATURES+=("langs"); YADR_ASDF_LANGS+=("all"); fi
         if [[ "$arg" == "keyboard" ]]; then FEATURES+=("keyboard"); fi
         if [[ "$arg" == "gnu" || "$arg" == "linuxify" ]]; then FEATURES+=("gnu"); fi
         if [[ "$arg" == "update" || "$arg" == "upgrade" ]]; then UPGRADE=1; fi
@@ -90,17 +92,13 @@ if [[ "$action" == "help" ]]; then
   echo ""
   echo "Features dynamically load from 'brewfiles/<feature>.Brewfile' or 'setup/hooks/pre|post/<feature>.zsh'"
   echo "Example 1: ./setup.zsh --macos --with-gnu --with-keyboard"
-  echo "Example 2: ./setup.zsh --with-langs                # Installs node, python, ruby, golang via asdf"
+  echo "Example 2: ./setup.zsh --with-langs                # Installs node, python, ruby, golang, php via asdf"
   echo "Example 3: ./setup.zsh --with-lang-ruby-3.2.0      # Installs a specific language and version via asdf"
-  echo "Example 4: ./setup.zsh --with-tools --without-asdf # Installs node via nvm and go via g-install instead"
+  echo "Example 4: ./setup.zsh --with-tiling-wm            # Installs AeroSpace (macOS) or i3-gaps (Linux)"
   echo ""
-  echo "Legacy Actions:"
-  echo "  tools     - Alias for standard setup + node tools"
-  echo "  macos     - Alias for --macos --with-macos"
-  echo "  omarchy   - Alias for --linux --with-omarchy"
-  echo "  keyboard  - Alias for --with-keyboard"
-  echo "  update    - Alias for --upgrade"
-  echo "  remove    - Alias for uninstall.sh"
+  echo "Maintenance:"
+  echo "  --upgrade     Update repository and plugins"
+  echo "  --migrate     Run sequential version migrations"
   exit 0
 fi
 
@@ -108,7 +106,7 @@ if [[ "$UPGRADE" == "1" ]]; then
   echo "==> Updating YADRLite repository..."
   cd "$YADR_DIR"
   git pull --rebase
-
+  
   echo "==> Updating tmux plugins..."
   mkdir -p "$YADR_DIR/tmux/plugin"
   for tplug in "${YADR_TMUX_PLUGINS[@]}"; do
@@ -124,8 +122,6 @@ if [[ "$UPGRADE" == "1" ]]; then
       (cd "$pdir" && git pull --rebase)
     fi
   done
-
-  echo "==> Repository updated. Resuming setup..."
 fi
 
 # Version Management
@@ -147,25 +143,7 @@ OS="${OS_OVERRIDE:-$(uname -s)}"
 OS_LOWER="${(L)OS}"
 if [[ "$OS_LOWER" == "darwin" ]]; then OS_LOWER="macos"; fi
 
-# Apply implicit features from legacy args
-if [[ "$action" == "macos" && ${FEATURES[(ie)macos]} -gt ${#FEATURES} ]]; then
-  FEATURES+=("macos")
-fi
-if [[ "$action" == "tools" && ${FEATURES[(ie)tools]} -gt ${#FEATURES} ]]; then
-  FEATURES+=("tools")
-fi
-
-# If tools are requested, we need Node.js, Go, Python, and PHP
-if (( ${FEATURES[(Ie)tools]} )); then
-  if [[ "$USE_ASDF" == "1" ]]; then
-    FEATURES+=("langs")
-    YADR_ASDF_LANGS+=("nodejs" "golang" "python" "php")
-  else
-    FEATURES+=("nvm" "golang-legacy" "python-legacy" "php-legacy")
-  fi
-fi
-
-# Always include base CLI tools
+# Core CLI Tools are always present
 if [[ "$USE_ASDF" == "1" ]]; then
   FEATURES+=("langs")
   # Inject global CLI tools into ASDF
@@ -179,6 +157,11 @@ else
   export USE_STARSHIP
 fi
 
+# Language fallback path for --without-asdf
+if (( ${FEATURES[(Ie)langs]} )) && [[ "$USE_ASDF" == "0" ]]; then
+  FEATURES+=("nvm" "golang-legacy" "python-legacy" "php-legacy")
+fi
+
 # Enforce Font Dependency for Starship
 if [[ "$USE_STARSHIP" == "1" ]]; then
   if (( ! ${FEATURES[(Ie)fonts]} )) && (( ! ${FEATURES[(Ie)dynamic-font]} )); then
@@ -186,7 +169,7 @@ if [[ "$USE_STARSHIP" == "1" ]]; then
   fi
 fi
 
-# Deduplicate features and ensure 'langs', 'nvm', 'golang-legacy' run before 'tools'
+# Deduplicate features and reorder
 FEATURES=("${(@u)FEATURES}")
 
 reorder_feature_first() {
@@ -215,7 +198,7 @@ touch "$TOOL_VERSIONS"
 if [[ "$USE_ASDF" == "1" ]]; then
   for req in "${YADR_ASDF_LANGS[@]}"; do
     if [[ "$req" == "all" ]]; then
-      echo "nodejs latest\npython latest\nruby latest\ngolang latest" >> "$TOOL_VERSIONS"
+      echo "nodejs latest\npython latest\nruby latest\ngolang latest\nphp latest" >> "$TOOL_VERSIONS"
     elif [[ "$req" =~ ^([a-zA-Z0-9_]+)-(.+)$ ]]; then
       lang="${match[1]}"
       ver="${match[2]}"
@@ -230,7 +213,6 @@ if [[ "$USE_ASDF" == "1" ]]; then
     fi
   done
   
-  # deduplicate
   if [[ -s "$TOOL_VERSIONS" ]]; then
     sort -u "$TOOL_VERSIONS" -o "$TOOL_VERSIONS"
   fi
