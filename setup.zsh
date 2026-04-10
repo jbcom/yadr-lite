@@ -148,13 +148,14 @@ if [[ "$action" == "tools" && ${FEATURES[(ie)tools]} -gt ${#FEATURES} ]]; then
   FEATURES+=("tools")
 fi
 
-# If tools are requested, we need Node.js and Go
+# If tools are requested, we need Node.js, Go, Python, and PHP
 if (( ${FEATURES[(Ie)tools]} )); then
+  FEATURES+=("php")
   if [[ "$USE_ASDF" == "1" ]]; then
     FEATURES+=("langs")
-    YADR_ASDF_LANGS+=("nodejs" "golang")
+    YADR_ASDF_LANGS+=("nodejs" "golang" "python")
   else
-    FEATURES+=("nvm" "golang-legacy")
+    FEATURES+=("nvm" "golang-legacy" "python-legacy")
   fi
 fi
 
@@ -170,7 +171,9 @@ reorder_feature_first() {
 
 reorder_feature_first "nvm"
 reorder_feature_first "golang-legacy"
+reorder_feature_first "python-legacy"
 reorder_feature_first "langs"
+reorder_feature_first "php"
 
 export USE_ASDF
 
