@@ -9,16 +9,6 @@ if ! grep -q 'export PATH="$HOME/.local/bin' "$SHELL_RC" 2>/dev/null; then
   echo 'export PATH="$HOME/.local/bin:$PATH"' >>"$SHELL_RC"
 fi
 
-echo "# # Installing Nerd Font"
-mkdir -p ~/.local/share/fonts
-font_files=("$YADR_DIR"/workstation/fonts/*.ttf(N))
-if (( ${#font_files[@]} > 0 )); then
-  cp "${font_files[@]}" ~/.local/share/fonts/
-  if command -v fc-cache &>/dev/null; then
-    fc-cache -fv ~/.local/share/fonts
-  fi
-fi
-
 echo "# # Installing config files (kitty, nvim, ranger)"
 mkdir -p ~/.config
 mkdir -p "$YADR_DIR/backup/config" 2>/dev/null

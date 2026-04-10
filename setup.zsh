@@ -16,6 +16,7 @@ fi
 OS_OVERRIDE=""
 typeset -a FEATURES=()
 typeset -a YADR_ASDF_LANGS=()
+typeset -a YADR_DYNAMIC_FONTS=()
 USE_ASDF=1
 USE_STARSHIP=1
 MIGRATE=0
@@ -44,6 +45,10 @@ for arg in "$@"; do
     --with-lang-*)
       FEATURES+=("langs")
       YADR_ASDF_LANGS+=("${arg#--with-lang-}")
+      ;;
+    --with-font-*)
+      FEATURES+=("dynamic-font")
+      YADR_DYNAMIC_FONTS+=("${arg#--with-font-}")
       ;;
     --with-*) FEATURES+=("${arg#--with-}") ;;
     setup|help) ;;
@@ -174,6 +179,13 @@ else
   export USE_STARSHIP
 fi
 
+# Enforce Font Dependency for Starship
+if [[ "$USE_STARSHIP" == "1" ]]; then
+  if (( ! ${FEATURES[(Ie)fonts]} )) && (( ! ${FEATURES[(Ie)dynamic-font]} )); then
+    FEATURES+=("fonts")
+  fi
+fi
+
 # Deduplicate features and ensure 'langs', 'nvm', 'golang-legacy' run before 'tools'
 FEATURES=("${(@u)FEATURES}")
 
@@ -184,6 +196,8 @@ reorder_feature_first() {
   fi
 }
 
+reorder_feature_first "fonts"
+reorder_feature_first "dynamic-font"
 reorder_feature_first "nvm"
 reorder_feature_first "golang-legacy"
 reorder_feature_first "python-legacy"
@@ -192,6 +206,7 @@ reorder_feature_first "cli-legacy"
 reorder_feature_first "langs"
 
 export USE_ASDF
+export YADR_DYNAMIC_FONTS
 
 # Generate .tool-versions file for ASDF
 TOOL_VERSIONS="$YADR_DIR/.tool-versions"
