@@ -1,12 +1,12 @@
-# YADRLite Bracketed Starship Configuration
-# Highly-optimized information density with box drawing connectors
-# Compatible with omarchy-theme-sync palette
+# Josean-dev Powerlevel10k style prompt for Starship
+# Two-line prompt with box drawing connectors
+# Compatible with omarchy-theme-sync
 
-"$schema" = 'https://starship.rs/config-schema.json'
+# Palette set by omarchy-theme-sync
 palette = 'seashells'
 
 format = """
-[╭─](bright-black) $username$hostname$directory$git_branch$git_state$git_status$git_metrics$docker_context$aws$gcloud$azure$terraform$nodejs$golang$python$ruby$php$rust$bun$fill$memory_usage$battery$time
+[╭─](bright-black) $username[@](at)$hostname $directory$git_branch$git_state$git_status$git_metrics$docker_context$aws$gcloud$azure$terraform$nodejs$golang$python$ruby$php$rust$bun$fill$memory_usage$battery$time
 [╰─](bright-black)$jobs$character"""
 
 add_newline = true
@@ -16,31 +16,40 @@ success_symbol = "[❯](green)"
 error_symbol = "[❯](red)"
 format = "$symbol "
 
+[jobs]
+symbol = "✦ "
+format = "[$symbol$number]($style) "
+style = "bold blue"
+
 [username]
 style_user = "user"
 style_root = "red bold"
-format = '\[[$user]($style)\]'
+format = "[$user]($style)"
 show_always = true
 
 [hostname]
 style = "host"
-format = '\[[$hostname]($style)\] '
+format = "[$hostname]($style)"
 ssh_only = false
 
 [directory]
-format = '\[[󰉋 $path]($style)\] '
+format = "[󰉋 $path]($style) "
 style = "path"
 truncation_length = 3
 truncate_to_repo = false
 home_symbol = "~"
 
 [git_branch]
-format = '\[[$symbol$branch]($style)\]'
+format = "[ $branch]($style) "
 style = "git"
 symbol = ""
 
+[git_state]
+format = "[$state( $progress_current/$progress_total)]($style) "
+style = "bright-black"
+
 [git_status]
-format = '([\[$all_status$ahead_behind\]]($style))'
+format = "[$all_status$ahead_behind]($style)"
 style = "prompt"
 untracked = "?"
 modified = "!"
@@ -53,75 +62,73 @@ behind = "⇣"
 diverged = "⇕"
 conflicted = "="
 
-[git_state]
-format = '\[[$state ($progress_current/$progress_total)]($style)\]'
-style = "bright-black"
-
 [git_metrics]
 disabled = false
-format = '\[[+$added]($added_style)\]\[[-$deleted]($deleted_style)\]'
+format = "([+$added]($added_style))([-$deleted]($deleted_style)) "
 added_style = "bold green"
 deleted_style = "bold red"
 
-[jobs]
-symbol = "✦ "
-format = '\[[$symbol$number]($style)\]'
-style = "bold blue"
-
 [docker_context]
-format = '\[[$symbol$context]($style)\]'
+format = "[  $context](blue bold) "
 only_with_files = false
 
 [aws]
-format = '\[[$symbol($profile)(\($region\))]($style)\]'
+format = "[  $profile]($style) "
 style = "yellow bold"
-symbol = " "
 
 [gcloud]
-format = '\[[$symbol$account(@$domain)(\($region\))]($style)\]'
+format = "[ 󱇶 $project]($style) "
 style = "bold blue"
 
 [azure]
-format = '\[[$symbol$subscription]($style)\]'
+format = "[ 󰠅 $subscription]($style) "
 style = "blue bold"
 disabled = false
 
 [terraform]
-format = '\[[$symbol$workspace]($style)\]'
+format = "[ 󱁢 $workspace]($style) "
+style = "bold blue"
 
 [nodejs]
-format = '\[[$symbol($version)]($style)\]'
+symbol = " "
+format = "[$symbol$version]($style) "
 style = "bold green"
 detect_files = ["package.json", ".node-version", ".nvmrc"]
 
 [python]
-format = '\[[${symbol}${pyenv_prefix}(${version})(\($virtualenv\))]($style)\]'
+symbol = " "
+format = "[${symbol}${pyenv_prefix}${version}(\($virtualenv\))]($style) "
 style = "yellow"
 
 [golang]
-format = '\[[$symbol($version)]($style)\]'
+symbol = " "
+format = "[$symbol$version]($style) "
 style = "bold cyan"
 
 [ruby]
-format = '\[[$symbol($version)]($style)\]'
+symbol = " "
+format = "[$symbol$version]($style) "
 style = "bold red"
 
 [php]
-format = '\[[$symbol($version)]($style)\]'
+symbol = " "
+format = "[$symbol$version]($style) "
 style = "89"
 
 [rust]
-format = '\[[$symbol($version)]($style)\]'
+symbol = " "
+format = "[$symbol$version]($style) "
 style = "bold red"
 
 [bun]
-format = '\[[$symbol($version)]($style)\]'
+symbol = "🥟 "
+format = "[$symbol$version]($style) "
 
 [battery]
 full_symbol = "🔋 "
 charging_symbol = "⚡️ "
 discharging_symbol = "🔌 "
-format = '\[[$symbol$percentage]($style)\]'
+format = "[$symbol$percentage]($style) "
 
 [[battery.display]]
 threshold = 20
@@ -132,7 +139,7 @@ disabled = false
 threshold = -1
 symbol = "󰍛 "
 style = "bold dimmed white"
-format = '\[$symbol[$ram( | $swap)]($style)\]'
+format = "[$symbol${ram}( | ${swap})]($style) "
 
 [fill]
 symbol = " ·"
@@ -140,14 +147,13 @@ style = "bright-black"
 
 [time]
 disabled = false
-format = '\[[$time]($style)\]'
+format = "[󰥔 $time]($style)"
 style = "time"
 time_format = "%I:%M:%S %p"
 
 [cmd_duration]
 min_time = 2000
-format = '\[[⏱ $duration]($style)\]'
-style = "bold yellow"
+format = "[ﱣ $duration](bold yellow)"
 
 # Right prompt for execution time (Zsh)
 right_format = """$cmd_duration"""
