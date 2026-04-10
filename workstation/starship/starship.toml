@@ -6,7 +6,7 @@
 palette = 'seashells'
 
 format = """
-[╭─](bright-black) $username[@](at)$hostname $directory$git_branch$git_status$python$fill$time
+[╭─](bright-black) $username[@](at)$hostname $directory$git_branch$git_status$nodejs$golang$python$ruby$php$rust$fill$memory_usage$battery$time
 [╰─](bright-black)$character"""
 
 add_newline = true
@@ -53,9 +53,49 @@ behind = "⇣"
 diverged = "⇕"
 conflicted = "="
 
+[nodejs]
+format = " [ $version](bold green) "
+detect_files = ["package.json", ".node-version", ".nvmrc"]
+detect_folders = ["node_modules"]
+
 [python]
-format = "[ $virtualenv]($style) "
-style = "yellow"
+format = " [ $version](yellow) "
+detect_files = ["requirements.txt", ".python-version", "Pipfile", "pyproject.toml", "setup.py"]
+
+[golang]
+format = " [ $version](bold cyan) "
+detect_files = ["go.mod", "go.sum", ".go-version"]
+detect_folders = ["Godeps"]
+
+[ruby]
+format = " [ $version](bold red) "
+detect_files = ["Gemfile", ".ruby-version"]
+detect_folders = []
+
+[php]
+format = " [ $version](89) "
+detect_files = ["composer.json", ".php-version"]
+
+[rust]
+format = " [ $version](bold red) "
+detect_files = ["Cargo.toml"]
+
+[battery]
+full_symbol = "🔋 "
+charging_symbol = "⚡️ "
+discharging_symbol = "🔌 "
+format = " [$symbol$percentage]($style) "
+
+[[battery.display]]
+threshold = 20
+style = "bold red"
+
+[memory_usage]
+disabled = false
+threshold = -1
+symbol = "󰍛 "
+style = "bold dimmed white"
+format = "[$symbol${ram}( | ${swap})]($style) "
 
 [fill]
 symbol = " ·"
