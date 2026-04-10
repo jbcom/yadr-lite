@@ -52,6 +52,9 @@ for arg in "$@"; do
     --with-tiling-wm)
       FEATURES+=("tiling-wm")
       ;;
+    --with-ai)
+      FEATURES+=("ai")
+      ;;
     --with-*) FEATURES+=("${arg#--with-}") ;;
     setup | help) ;;
     *)
@@ -67,13 +70,15 @@ for arg in "$@"; do
         fi
         if [[ "$arg" == "tools" ]]; then
           FEATURES+=("langs")
-          YADR_ASDF_LANGS+=("all")
+          YADR_ASDF_LANGS+=("golang" "python" "php")
         fi
+        if [[ "$arg" == "ai" ]]; then FEATURES+=("ai"); fi
         if [[ "$arg" == "keyboard" ]]; then FEATURES+=("keyboard"); fi
         if [[ "$arg" == "gnu" || "$arg" == "linuxify" ]]; then FEATURES+=("gnu"); fi
         if [[ "$arg" == "update" || "$arg" == "upgrade" ]]; then UPGRADE=1; fi
       else
         echo "Unknown argument: $arg"
+        exit 1
       fi
       ;;
   esac
@@ -103,6 +108,8 @@ if [[ "$action" == "help" ]]; then
   echo "Example 2: ./setup.zsh --with-langs                # Installs node, python, ruby, golang, php via asdf"
   echo "Example 3: ./setup.zsh --with-lang-ruby-3.2.0      # Installs a specific language and version via asdf"
   echo "Example 4: ./setup.zsh --with-tiling-wm            # Installs AeroSpace (macOS) or i3-gaps (Linux)"
+  echo "Example 5: ./setup.zsh --with-ai                   # Installs gemini-cli, claude-code, codex"
+  echo "Example 6: ./setup.zsh --with-langs --without-asdf # Installs node via nvm and go via g-install instead"
   echo ""
   echo "Maintenance:"
   echo "  --upgrade     Update repository and plugins"
@@ -225,7 +232,10 @@ run_hook() {
   local hook_path="$1"
   if [[ -f "$hook_path" ]]; then
     echo "==> Running hook: $(basename "$hook_path")"
-    source "$hook_path"
+    if ! source "$hook_path"; then
+      echo "Error: Hook $(basename "$hook_path") failed with exit code $?. Aborting setup."
+      exit 1
+    fi
   fi
 }
 
@@ -233,7 +243,10 @@ run_brewfile() {
   local brewfile_path="$1"
   if [[ -f "$brewfile_path" ]]; then
     echo "==> Installing packages from $(basename "$brewfile_path")"
-    brew bundle --file="$brewfile_path"
+    if ! brew bundle --file="$brewfile_path"; then
+      echo "Error: Failed to install packages from $(basename "$brewfile_path"). Aborting setup."
+      exit 1
+    fi
   fi
 }
 
