@@ -63,19 +63,20 @@ for arg in "$@"; do
         if [[ "$arg" == "macos" ]]; then
           OS_OVERRIDE="Darwin"
           FEATURES+=("macos" "tiling-wm")
-        fi
-        if [[ "$arg" == "omarchy" || "$arg" == "linux" ]]; then
+        elif [[ "$arg" == "omarchy" || "$arg" == "linux" ]]; then
           OS_OVERRIDE="Linux"
           FEATURES+=("linux" "tiling-wm")
-        fi
-        if [[ "$arg" == "tools" ]]; then
+        elif [[ "$arg" == "tools" ]]; then
           FEATURES+=("langs")
           YADR_ASDF_LANGS+=("golang" "python" "php")
+        elif [[ "$arg" == "ai" ]]; then FEATURES+=("ai");
+        elif [[ "$arg" == "keyboard" ]]; then FEATURES+=("keyboard");
+        elif [[ "$arg" == "gnu" || "$arg" == "linuxify" ]]; then FEATURES+=("gnu");
+        elif [[ "$arg" == "update" || "$arg" == "upgrade" ]]; then UPGRADE=1;
+        else
+          echo "Unknown argument: $arg"
+          exit 1
         fi
-        if [[ "$arg" == "ai" ]]; then FEATURES+=("ai"); fi
-        if [[ "$arg" == "keyboard" ]]; then FEATURES+=("keyboard"); fi
-        if [[ "$arg" == "gnu" || "$arg" == "linuxify" ]]; then FEATURES+=("gnu"); fi
-        if [[ "$arg" == "update" || "$arg" == "upgrade" ]]; then UPGRADE=1; fi
       else
         echo "Unknown argument: $arg"
         exit 1
@@ -233,7 +234,7 @@ run_hook() {
   if [[ -f "$hook_path" ]]; then
     echo "==> Running hook: $(basename "$hook_path")"
     if ! source "$hook_path"; then
-      echo "Error: Hook $(basename "$hook_path") failed with exit code $?. Aborting setup."
+      echo "Error: Hook $(basename "$hook_path") failed with exit code $?. Aborting setup." >&2
       exit 1
     fi
   fi
@@ -244,7 +245,7 @@ run_brewfile() {
   if [[ -f "$brewfile_path" ]]; then
     echo "==> Installing packages from $(basename "$brewfile_path")"
     if ! brew bundle --file="$brewfile_path"; then
-      echo "Error: Failed to install packages from $(basename "$brewfile_path"). Aborting setup."
+      echo "Error: Failed to install packages from $(basename "$brewfile_path"). Aborting setup." >&2
       exit 1
     fi
   fi
