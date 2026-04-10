@@ -11,7 +11,13 @@ YADRLite uses a highly modular feature-router system based on **Zsh** and **Home
 4. **`setup/hooks/pre/<feature>.zsh`**: Commands that run *before* the Brewfile.
 5. **`setup/hooks/post/<feature>.zsh`**: Commands that run *after* the Brewfile (e.g. symlinking, starting services).
 
-## How to Add a New Feature
+## The "Golden Path" Architecture: Tools vs. Runtimes
+
+When adding dependencies, you must respect the architectural boundary between System Tools and Language Runtimes:
+
+1. **System CLI Tools (Homebrew)**: Binaries like `ripgrep`, `fd`, `fzf`, `tmux`, and `neovim` MUST be installed via a `.Brewfile`. Homebrew compiles these natively for the host architecture (crucial for Apple Silicon ARM64 compatibility) and correctly symlinks `man` pages and Zsh completions. 
+   - *Do not attempt to install system binaries via ASDF plugins.*
+2. **Language Runtimes (ASDF)**: Languages like `node`, `ruby`, `python`, and `go` MUST be managed via ASDF (by appending them to the `YADR_ASDF_LANGS` array). ASDF is strictly reserved for managing project-specific runtime SDKs, *not* compiled system binaries.
 
 Want to add a new suite of tools (like Rust or Docker)? It's incredibly easy!
 

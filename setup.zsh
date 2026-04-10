@@ -146,17 +146,8 @@ OS_LOWER="${(L)OS}"
 if [[ "$OS_LOWER" == "darwin" ]]; then OS_LOWER="macos"; fi
 
 # Core CLI Tools are always present
-if [[ "$USE_ASDF" == "1" ]]; then
-  FEATURES+=("langs")
-  # Inject global CLI tools into ASDF
-  local asdf_cli=("ripgrep" "fd" "fzf" "lazygit" "glow" "gitleaks" "zoxide")
-  if [[ "$USE_STARSHIP" == "1" ]]; then
-    asdf_cli+=("starship")
-  fi
-  YADR_ASDF_LANGS+=("${asdf_cli[@]}")
-else
-  FEATURES+=("cli-legacy")
-  export USE_STARSHIP
+if [[ "$USE_STARSHIP" == "1" ]]; then
+  FEATURES+=("starship")
 fi
 
 # Language fallback path for --without-asdf
@@ -183,11 +174,11 @@ reorder_feature_first() {
 
 reorder_feature_first "fonts"
 reorder_feature_first "dynamic-font"
+reorder_feature_first "starship"
 reorder_feature_first "nvm"
 reorder_feature_first "golang-legacy"
 reorder_feature_first "python-legacy"
 reorder_feature_first "php-legacy"
-reorder_feature_first "cli-legacy"
 reorder_feature_first "langs"
 
 export USE_ASDF

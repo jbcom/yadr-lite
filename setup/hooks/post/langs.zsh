@@ -18,14 +18,4 @@ else
   echo "Error: setup/scripts/asdf-install.zsh not found or not executable"
 fi
 
-if grep -q 'starship' "$YADR_DIR/.tool-versions" 2>/dev/null; then
-  echo "==> Configuring Starship (ASDF)"
-  mkdir -p ~/.config
-  safe_symlink "$YADR_DIR/workstation/starship/starship.toml" ~/.config/starship.toml
-  
-  if ! grep -q 'starship init zsh' "$SHELL_RC" 2>/dev/null; then
-    echo '' >>"$SHELL_RC"
-    echo '# Starship prompt' >>"$SHELL_RC"
-    echo 'eval "$(starship init zsh)"' >>"$SHELL_RC"
-  fi
-fi
+
