@@ -228,7 +228,7 @@ run_brewfile() {
   local brewfile_path="$1"
   if [[ -f "$brewfile_path" ]]; then
     echo "==> Installing packages from $(basename "$brewfile_path")"
-    brew bundle --file="$brewfile_path" --no-lock
+    brew bundle --file="$brewfile_path"
   fi
 }
 

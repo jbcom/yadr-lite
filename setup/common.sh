@@ -1,7 +1,8 @@
 #!/usr/bin/env zsh
 
 # Common utilities for yadrlite setup scripts
-export YADR_DIR=~/.yadrlite
+# Dynamically resolve YADR_DIR based on the script's location
+export YADR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-${(%):-%x}}")/.." && pwd)"
 export DOTFILES_OLD=backup
 
 typeset -a YADR_FILES=('vim' 'vimrc' 'tmux.conf' 'bash_profile' 'bashrc' 'vimrc.after')
