@@ -194,7 +194,7 @@ touch "$TOOL_VERSIONS"
 if [[ "$USE_ASDF" == "1" ]]; then
   for req in "${YADR_ASDF_LANGS[@]}"; do
     if [[ "$req" == "all" ]]; then
-      echo "nodejs latest\npython latest\nruby latest\ngolang latest\nphp latest" >>"$TOOL_VERSIONS"
+      echo "python latest\nruby latest\ngolang latest\nphp latest" >> "$TOOL_VERSIONS"
     elif [[ "$req" =~ ^([a-zA-Z0-9_]+)-(.+)$ ]]; then
       lang="${match[1]}"
       ver="${match[2]}"
