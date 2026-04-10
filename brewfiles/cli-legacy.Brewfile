@@ -1,0 +1,8 @@
+brew "ripgrep"
+brew "fd"
+brew "fzf"
+brew "lazygit"
+brew "glow"
+brew "gitleaks"
+brew "starship"
+brew "zoxide"

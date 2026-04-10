@@ -31,10 +31,4 @@ find ~/.config -type d -exec chmod 0755 {} \;
 find ~/.config -type f -exec chmod 0644 {} \;
 find ~/.config -name "*.sh" -execdir chmod u+x {} +
 
-cp "$YADR_DIR/workstation/starship/starship.toml" ~/.config/starship.toml
 
-if ! grep -q 'starship init zsh' "$SHELL_RC" 2>/dev/null; then
-  echo '' >>"$SHELL_RC"
-  echo '# Starship prompt' >>"$SHELL_RC"
-  echo 'eval "$(starship init zsh)"' >>"$SHELL_RC"
-fi

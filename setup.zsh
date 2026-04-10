@@ -17,6 +17,7 @@ OS_OVERRIDE=""
 typeset -a FEATURES=()
 typeset -a YADR_ASDF_LANGS=()
 USE_ASDF=1
+USE_STARSHIP=1
 MIGRATE=0
 UPGRADE=0
 HAS_MACOS_FLAG=0
@@ -33,6 +34,7 @@ for arg in "$@"; do
       HAS_LINUX_FLAG=1
       ;;
     --without-asdf) USE_ASDF=0 ;;
+    --without-starship) USE_STARSHIP=0 ;;
     --migrate) MIGRATE=1 ;;
     --upgrade) UPGRADE=1 ;;
     --with-langs)
@@ -150,13 +152,26 @@ fi
 
 # If tools are requested, we need Node.js, Go, Python, and PHP
 if (( ${FEATURES[(Ie)tools]} )); then
-  FEATURES+=("php")
   if [[ "$USE_ASDF" == "1" ]]; then
     FEATURES+=("langs")
-    YADR_ASDF_LANGS+=("nodejs" "golang" "python")
+    YADR_ASDF_LANGS+=("nodejs" "golang" "python" "php")
   else
-    FEATURES+=("nvm" "golang-legacy" "python-legacy")
+    FEATURES+=("nvm" "golang-legacy" "python-legacy" "php-legacy")
   fi
+fi
+
+# Always include base CLI tools
+if [[ "$USE_ASDF" == "1" ]]; then
+  FEATURES+=("langs")
+  # Inject global CLI tools into ASDF
+  local asdf_cli=("ripgrep" "fd" "fzf" "lazygit" "glow" "gitleaks" "zoxide")
+  if [[ "$USE_STARSHIP" == "1" ]]; then
+    asdf_cli+=("starship")
+  fi
+  YADR_ASDF_LANGS+=("${asdf_cli[@]}")
+else
+  FEATURES+=("cli-legacy")
+  export USE_STARSHIP
 fi
 
 # Deduplicate features and ensure 'langs', 'nvm', 'golang-legacy' run before 'tools'
@@ -172,8 +187,9 @@ reorder_feature_first() {
 reorder_feature_first "nvm"
 reorder_feature_first "golang-legacy"
 reorder_feature_first "python-legacy"
+reorder_feature_first "php-legacy"
+reorder_feature_first "cli-legacy"
 reorder_feature_first "langs"
-reorder_feature_first "php"
 
 export USE_ASDF
 
