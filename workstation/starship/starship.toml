@@ -6,7 +6,7 @@
 palette = 'seashells'
 
 format = """
-[╭─](bright-black) $username[@](at)$hostname $directory$git_branch$git_state$git_status$git_metrics$docker_context$aws$nodejs$golang$python$ruby$php$rust$fill$memory_usage$battery$time
+[╭─](bright-black) $username[@](at)$hostname $directory$git_branch$git_state$git_status$git_metrics$docker_context$aws$gcloud$azure$nodejs$golang$python$ruby$php$rust$fill$memory_usage$battery$time
 [╰─](bright-black)$jobs$character"""
 
 add_newline = true
@@ -39,6 +39,15 @@ only_with_files = false
 format = "[  $profile]($style) "
 style = "yellow bold"
 symbol = " "
+
+[gcloud]
+format = "[ 󱇶 $project]($style) "
+style = "bold blue"
+
+[azure]
+format = "[ 󰠅 $subscription]($style) "
+style = "blue bold"
+disabled = false
 
 [username]
 style_user = "user"
