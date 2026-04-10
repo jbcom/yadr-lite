@@ -20,10 +20,27 @@ cp "$YADR_DIR/workstation/macos/aerospace/aerospace.toml" ~/.config/aerospace/ae
 
 echo "# # Configuring Sketchybar"
 mkdir -p ~/.config/sketchybar/plugins
-cp "$YADR_DIR/workstation/macos/sketchybar/sketchybarrc" ~/.config/sketchybar/sketchybarrc
-cp "$YADR_DIR/workstation/macos/sketchybar/plugins/"*.sh ~/.config/sketchybar/plugins/
-chmod +x ~/.config/sketchybar/sketchybarrc
-chmod +x ~/.config/sketchybar/plugins/*.sh
+
+# Determine source for Sketchybar configuration
+SB_BREW_DIR="$(brew --prefix sketchybar 2>/dev/null)/share/sketchybar/examples"
+SB_YADR_DIR="$YADR_DIR/workstation/macos/sketchybar"
+
+if [[ -f "$SB_YADR_DIR/sketchybarrc" ]]; then
+  # Symlink custom YADRLite configuration
+  ln -sf "$SB_YADR_DIR/sketchybarrc" ~/.config/sketchybar/sketchybarrc
+  for plugin in "$SB_YADR_DIR/plugins/"*.sh; do
+    ln -sf "$plugin" ~/.config/sketchybar/plugins/
+  done
+elif [[ -d "$SB_BREW_DIR" ]]; then
+  # Symlink default Homebrew configuration to prevent stale copies
+  ln -sf "$SB_BREW_DIR/sketchybarrc" ~/.config/sketchybar/sketchybarrc
+  for plugin in "$SB_BREW_DIR/plugins/"*; do
+    ln -sf "$plugin" ~/.config/sketchybar/plugins/
+  done
+fi
+
+chmod +x ~/.config/sketchybar/sketchybarrc 2>/dev/null || true
+chmod +x ~/.config/sketchybar/plugins/*.sh 2>/dev/null || true
 
 echo "# # Configuring JankyBorders"
 mkdir -p ~/.config/borders

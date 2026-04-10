@@ -1,6 +1,5 @@
-tap "nikitabobko/tap"
+tap "FelixKratz/formulae"
 cask "ghostty"
-cask "aerospace"
 brew "sketchybar"
 brew "borders"
 brew "duti"
