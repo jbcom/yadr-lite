@@ -239,16 +239,19 @@ run_brewfile() {
 
 # 1. Core global setup
 run_hook "$SCRIPT_DIR/setup/hooks/pre/core.zsh"
+run_brewfile "$SCRIPT_DIR/brewfiles/global-taps.Brewfile"
 run_brewfile "$SCRIPT_DIR/brewfiles/global.Brewfile"
 
 # 2. OS-specific setup
 run_hook "$SCRIPT_DIR/setup/hooks/pre/${OS_LOWER}.zsh"
+run_brewfile "$SCRIPT_DIR/brewfiles/${OS_LOWER}-taps.Brewfile"
 run_brewfile "$SCRIPT_DIR/brewfiles/${OS_LOWER}.Brewfile"
 
 # 3. Feature modules
 for feature in $FEATURES; do
   if [[ "$feature" != "$OS_LOWER" ]]; then
     run_hook "$SCRIPT_DIR/setup/hooks/pre/${feature}.zsh"
+    run_brewfile "$SCRIPT_DIR/brewfiles/${feature}-taps.Brewfile"
     run_brewfile "$SCRIPT_DIR/brewfiles/${feature}.Brewfile"
     run_hook "$SCRIPT_DIR/setup/hooks/post/${feature}.zsh"
   fi

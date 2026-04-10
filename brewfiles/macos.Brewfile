@@ -1,4 +1,3 @@
-tap "FelixKratz/formulae"
 cask "ghostty"
 cask "font-hack-nerd-font"
 brew "sketchybar"
