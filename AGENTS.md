@@ -14,7 +14,7 @@ Do NOT assume a traditional monolithic bash script structure. This repo is clean
 - Finally, it clones this repository to `~/.yadrlite`.
 - **Do not put post-installation logic in `install.sh`.**
 
-### 2. The Orchestrator (`setup.sh`)
+### 2. The Orchestrator (`setup.zsh`)
 - **Language**: `#!/usr/bin/env zsh`
 - **Purpose**: Parses CLI arguments (`--macos`, `--linux`, `--with-*`) to dynamically load feature bundles.
 - It executes `setup/hooks/pre/<feature>.zsh`.

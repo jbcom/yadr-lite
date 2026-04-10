@@ -12,7 +12,7 @@ if [[ "$USE_ASDF" == "1" ]]; then
     if [[ -s "$HOME/.nvm/nvm.sh" ]]; then
       # Source it and get current version
       source "$HOME/.nvm/nvm.sh"
-      local nvm_ver=$(nvm current 2>/dev/null | sed 's/^v//')
+      nvm_ver=$(nvm current 2>/dev/null | sed 's/^v//')
       if [[ "$nvm_ver" != "none" && "$nvm_ver" != "system" && -n "$nvm_ver" ]]; then
         echo "    -> Node.js version $nvm_ver captured. Adding to .tool-versions."
         echo "nodejs $nvm_ver" >> "$YADR_DIR/.tool-versions"

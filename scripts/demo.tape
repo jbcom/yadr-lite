@@ -6,18 +6,18 @@ Set Height 600
 Set Padding 40
 Set Theme "Catppuccin Macchiato"
 
-Type "chmod +x setup.sh"
+Type "chmod +x setup.zsh"
 Enter
 Sleep 500ms
 
-Type "./setup.sh help"
+Type "./setup.zsh help"
 Enter
 Sleep 4s
 
 Type "clear"
 Enter
 
-Type "./setup.sh --macos --with-gnu --with-keyboard"
+Type "./setup.zsh --macos --with-gnu --with-keyboard"
 Enter
 Sleep 4s
 

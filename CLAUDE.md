@@ -68,7 +68,7 @@ bash install
 - Creates symbolic links in home directory for base config files
 - Clones and sets up core tmux plugins
 
-**setup script** (`./setup.sh`): Post-installation management orchestrator. It routes to focused scripts in the `setup/` directory for actions like:
+**setup script** (`./setup.zsh`): Post-installation management orchestrator. It routes to focused scripts in the `setup/` directory for actions like:
 - `tools`: Installs external binaries and development tools
 - `update`: Updates plugins and components
 - `macos`: Provisions macOS specific software (AeroSpace, Sketchybar, Ghostty)
@@ -80,7 +80,7 @@ bash install
 ```
 ├── setup/          # Modular post-installation management scripts
 ├── install.sh      # Initial bootstrap script
-├── setup.sh        # Setup management entrypoint
+├── setup.zsh        # Setup management entrypoint
 ├── bash/           # Bash configuration snippets injected into .bashrc/.bash_profile
 ├── emacs.d/        # Emacs configuration with Evil mode
 │   └── emacs.init  # Main Emacs initialization file (55k+ lines)
@@ -194,6 +194,6 @@ make check
 Automated testing is configured via GitHub Actions (`.github/workflows/ci.yml`) and runs across both Ubuntu and macOS to ensure cross-platform compliance.
 
 **Key Tools:**
-- **ShellSpec**: Used for behavioral and unit testing of `install.sh` and the `setup/*` scripts.
+- **ShellSpec**: Used for behavioral and unit testing of `install.sh` and the `setup.zsh` router.
 - **ShellCheck**: Statically analyzes `install.sh` for POSIX `sh` compliance and safety.
 - **Zsh Syntax**: The `make lint` target automatically runs `zsh -n` across all `.sh` files in the `setup/` directory to catch syntax errors before execution.

@@ -6,7 +6,7 @@ First off, thank you for considering contributing to YADRLite!
 YADRLite uses a highly modular feature-router system based on **Zsh** and **Homebrew**. 
 
 1. **`install.sh`**: Pure POSIX `sh` script. Installs Homebrew, Git, Zsh, authorizes Zsh in `/etc/shells`, changes the user's shell, and clones the repo.
-2. **`setup.sh`**: The orchestrator. Parses OS flags (`--macos` or `--linux`) and feature flags (`--with-<feature>`).
+2. **`setup.zsh`**: The orchestrator. Parses OS flags (`--macos` or `--linux`) and feature flags (`--with-<feature>`).
 3. **`brewfiles/<feature>.Brewfile`**: The Homebrew bundle listing dependencies for a feature.
 4. **`setup/hooks/pre/<feature>.zsh`**: Commands that run *before* the Brewfile.
 5. **`setup/hooks/post/<feature>.zsh`**: Commands that run *after* the Brewfile (e.g. symlinking, starting services).
@@ -30,7 +30,7 @@ Want to add a new suite of tools (like Rust or Docker)? It's incredibly easy!
    ```
 3. Test your new feature locally:
    ```bash
-   zsh ~/.yadrlite/setup.sh --with-docker
+   zsh ~/.yadrlite/setup.zsh --with-docker
    ```
 
 ## Development Guidelines
