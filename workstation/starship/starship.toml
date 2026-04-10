@@ -6,8 +6,8 @@
 palette = 'seashells'
 
 format = """
-[╭─](bright-black) $username[@](at)$hostname $directory$git_branch$git_status$nodejs$golang$python$ruby$php$rust$fill$memory_usage$battery$time
-[╰─](bright-black)$character"""
+[╭─](bright-black) $username[@](at)$hostname $directory$git_branch$git_state$git_status$git_metrics$docker_context$aws$nodejs$golang$python$ruby$php$rust$fill$memory_usage$battery$time
+[╰─](bright-black)$jobs$character"""
 
 add_newline = true
 
@@ -15,6 +15,30 @@ add_newline = true
 success_symbol = "[❯](green)"
 error_symbol = "[❯](red)"
 format = "$symbol "
+
+[jobs]
+symbol = "✦ "
+format = "[$symbol$number]($style) "
+style = "bold blue"
+
+[git_state]
+format = "[$state( $progress_current/$progress_total)]($style) "
+style = "bright-black"
+
+[git_metrics]
+disabled = false
+format = "([+$added]($added_style))([-$deleted]($deleted_style)) "
+added_style = "bold green"
+deleted_style = "bold red"
+
+[docker_context]
+format = "[  $context](blue bold) "
+only_with_files = false
+
+[aws]
+format = "[  $profile]($style) "
+style = "yellow bold"
+symbol = " "
 
 [username]
 style_user = "user"
@@ -106,6 +130,16 @@ disabled = false
 format = "[󰥔 $time]($style)"
 style = "time"
 time_format = "%I:%M:%S %p"
+
+# Right prompt for execution time (Zsh)
+right_format = """$cmd_duration"""
+
+[cmd_duration]
+min_time = 2000
+format = "[ﱣ $duration](bold yellow)"
+
+# Continuation prompt (Zsh)
+continuation_prompt = "[▶▶ ](bright-black)"
 
 # Palette managed by omarchy-theme-sync
 # Run 'omarchy-theme-sync' after theme changes
