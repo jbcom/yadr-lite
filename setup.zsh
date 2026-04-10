@@ -36,6 +36,7 @@ for arg in "$@"; do
     --without-asdf) USE_ASDF=0 ;;
     --migrate) MIGRATE=1 ;;
     --upgrade) UPGRADE=1 ;;
+    --force) FORCE=1 ;;
     --with-langs)
       FEATURES+=("langs")
       YADR_ASDF_LANGS+=("all")
