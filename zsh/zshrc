@@ -29,7 +29,23 @@ export NNN_COLORS='#0a1b2c3d;1234'
 export NNN_FCOLORS='c1e2272e006033f7c6d6abc4'
 export PATH="$HOME/.local/bin:$PATH"
 
-# Default Prompt (only if Starship is not installed)
-if ! command -v starship &>/dev/null; then
-  export PS1="\n\[\033[0;33m\][\[\033[0;36m\]\t\[\033[0;33m\]] \[\033[0;35m\]\u\[\033[0;32m\]@\H \[\033[0;34m\]\w\n\[\033[0;33m\]~\\$ \[\033[0;0m\]"
+# Go paths
+export GOPATH="$HOME/go"
+export PATH="$GOPATH/bin:$PATH"
+
+# Enable ASDF Version Manager
+if [ -f "$(brew --prefix asdf 2>/dev/null)/libexec/asdf.sh" ]; then
+  source "$(brew --prefix asdf 2>/dev/null)/libexec/asdf.sh"
+fi
+
+# Enable zoxide (smart cd)
+if command -v zoxide &>/dev/null; then
+  eval "$(zoxide init zsh)"
+fi
+
+# Enable Starship Prompt
+if command -v starship &>/dev/null; then
+  eval "$(starship init zsh)"
+else
+  export PROMPT="%F{yellow}[%F{cyan}%~%F{yellow}] %F{magenta}%n%F{green}@%m %F{blue}%d%f%b\n%F{yellow}~%# %f"
 fi

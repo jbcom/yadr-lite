@@ -6,7 +6,7 @@
 
 dir="$HOME/.yadrlite"
 dotfiles_old="backup"
-files="vim vimrc tmux.conf bash_profile bashrc vimrc.after"
+files="vim vimrc tmux.conf zshrc vimrc.after"
 tmuxplugins="https://github.com/tmux-plugins/tmux-resurrect.git https://github.com/tmux-plugins/tmux-sensible https://github.com/wfxr/tmux-power.git"
 
 sed_i() {
@@ -74,11 +74,11 @@ git clone https://github.com/odysseyalive/dotfiles.git "$dir"
 echo "# # Backing up current configurations"
 echo "# # # # # # # # # # # # # # # # # # # # # #"
 cd "$dir" || exit 1
-cat ~/.bashrc >"$dir/bashrc" 2>/dev/null
-cat ~/.bash_profile >"$dir/bash_profile" 2>/dev/null
 mkdir -p "$dotfiles_old" 2>/dev/null
 for cfile in $files; do
-  mv ~/."$cfile" "$dir/$dotfiles_old/" 2>/dev/null
+  if [ -e ~/."$cfile" ] || [ -L ~/."$cfile" ]; then
+    mv ~/."$cfile" "$dir/$dotfiles_old/" 2>/dev/null
+  fi
 done
 
 echo "# # Vim and Tmux Configurations"
@@ -108,19 +108,13 @@ for tplug in $tmuxplugins; do
   git clone "$tplug"
 done
 
-# covers injection into most existing configurations
-if ! grep -q "$HOME/.bashrc" "$dir/bash_profile" && ! grep -q "$HOME/.bash_profile" "$dir/bashrc"; then
-  cat "$dir/bash/bashrc" >>"$dir/bashrc" 2>/dev/null
-  echo "source $HOME/.bashrc" >>"$dir/bash_profile" 2>/dev/null
-elif ! grep -q "$HOME/.bashrc" "$dir/bash_profile"; then
-  cat "$dir/bash/bashrc" >>"$dir/bash_profile" 2>/dev/null
+# Inject YADRLite into ~/.zshrc
+if ! grep -q "source $dir/zshrc" "$HOME/.zshrc" 2>/dev/null; then
+  cat "$HOME/.zshrc" > "$dir/zshrc" 2>/dev/null
+  cat "$dir/zsh/zshrc" >> "$dir/zshrc" 2>/dev/null
 else
-  cat "$dir/bash/bashrc" >>"$dir/bashrc" 2>/dev/null
+  cat "$dir/zsh/zshrc" >> "$dir/zshrc" 2>/dev/null
 fi
-
-# fixes sourcing of bashrc within tmux
-sed_i "s@.*\..*/etc/bashrc@    source /etc/bashrc@g" "$dir/bashrc"
-sed_i "s@.*\..*~\.bashrc@    source ~/.bashrc@g" "$dir/bash_profile"
 
 echo "# # Building Symbolic Links"
 echo "# # # # # # # # # # # # # # # # # # # # # #"
@@ -136,11 +130,11 @@ ln -sf "$dir/tmux.conf" ~/.config/tmux/tmux.conf
 
 # Ensure Homebrew environment variables are added to ~/.zshrc if they aren't already there
 if [ -f "/opt/homebrew/bin/brew" ] && ! grep -q "eval \"\$(/opt/homebrew/bin/brew shellenv)\"" ~/.zshrc 2>/dev/null; then
-  echo "eval \"\$(/opt/homebrew/bin/brew shellenv)\"" >> ~/.zshrc
+  echo "eval \"\$(/opt/homebrew/bin/brew shellenv)\"" >>~/.zshrc
 elif [ -f "/usr/local/bin/brew" ] && ! grep -q "eval \"\$(/usr/local/bin/brew shellenv)\"" ~/.zshrc 2>/dev/null; then
-  echo "eval \"\$(/usr/local/bin/brew shellenv)\"" >> ~/.zshrc
+  echo "eval \"\$(/usr/local/bin/brew shellenv)\"" >>~/.zshrc
 elif [ -f "/home/linuxbrew/.linuxbrew/bin/brew" ] && ! grep -q "eval \"\$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\"" ~/.zshrc 2>/dev/null; then
-  echo "eval \"\$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\"" >> ~/.zshrc
+  echo "eval \"\$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\"" >>~/.zshrc
 fi
 
 echo ""

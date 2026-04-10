@@ -6,7 +6,7 @@
 
 dir="$HOME/.yadrlite"
 dotfiles_old="backup"
-files="vim vimrc tmux.conf bash_profile bashrc vimrc.after"
+files="vim vimrc tmux.conf zshrc vimrc.after"
 configs="kitty nvim ranger"
 
 FORCE=0
@@ -16,7 +16,7 @@ for arg in "$@"; do
   case $arg in
     --force) FORCE=1 ;;
     --all) REMOVE_ALL=1 ;;
-    -h|--help)
+    -h | --help)
       echo "Usage: ./uninstall.sh [--force] [--all]"
       echo "  --force   Bypass confirmation prompts"
       echo "  --all     Also uninstall Homebrew packages managed by YADRLite"
@@ -29,8 +29,11 @@ if [ "$FORCE" -eq 0 ]; then
   printf "Are you sure you want to completely remove YADRLite? [y/N] "
   read -r response
   case "$response" in
-    [yY][eE][sS]|[yY]) ;;
-    *) echo "Uninstallation cancelled."; exit 0 ;;
+    [yY][eE][sS] | [yY]) ;;
+    *)
+      echo "Uninstallation cancelled."
+      exit 0
+      ;;
   esac
 fi
 
