@@ -6,11 +6,13 @@ sudo btrfs quota disable / 2>/dev/null || true
 
 echo "# # Installing Fira Code Nerd Font"
 mkdir -p ~/.local/share/fonts
-cp "$YADR_DIR/workstation/fonts/"*.ttf ~/.local/share/fonts/
+for f in "$YADR_DIR"/workstation/fonts/*.ttf(N); do
+  safe_symlink "$f" ~/.local/share/fonts/$(basename "$f")
+done
 
 echo "# # Installing fontconfig for ligature support"
 mkdir -p ~/.config/fontconfig
-cp "$YADR_DIR/workstation/fontconfig/fonts.conf" ~/.config/fontconfig/
+safe_symlink "$YADR_DIR/workstation/fontconfig/fonts.conf" ~/.config/fontconfig/fonts.conf
 fc-cache -fv
 
 echo "# # Configuring Kitty for Omarchy theme switching"

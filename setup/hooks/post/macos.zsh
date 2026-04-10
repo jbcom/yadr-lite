@@ -3,7 +3,7 @@ setopt nullglob
 
 echo "# # Configuring Ghostty"
 mkdir -p ~/.config/ghostty
-cp "$YADR_DIR/workstation/macos/ghostty/config" ~/.config/ghostty/config
+safe_symlink "$YADR_DIR/workstation/macos/ghostty/config" ~/.config/ghostty/config
 
 echo "# # Setting Ghostty as default terminal"
 # duti is installed via macos.Brewfile
@@ -16,7 +16,7 @@ echo "  Ghostty set as default for shell scripts and executables"
 
 echo "# # Configuring AeroSpace"
 mkdir -p ~/.config/aerospace
-cp "$YADR_DIR/workstation/macos/aerospace/aerospace.toml" ~/.config/aerospace/aerospace.toml
+safe_symlink "$YADR_DIR/workstation/macos/aerospace/aerospace.toml" ~/.config/aerospace/aerospace.toml
 
 echo "# # Configuring Sketchybar"
 mkdir -p ~/.config/sketchybar/plugins
@@ -27,15 +27,15 @@ SB_YADR_DIR="$YADR_DIR/workstation/macos/sketchybar"
 
 if [[ -f "$SB_YADR_DIR/sketchybarrc" ]]; then
   # Symlink custom YADRLite configuration
-  ln -sf "$SB_YADR_DIR/sketchybarrc" ~/.config/sketchybar/sketchybarrc
+  safe_symlink "$SB_YADR_DIR/sketchybarrc" ~/.config/sketchybar/sketchybarrc
   for plugin in "$SB_YADR_DIR/plugins/"*.sh; do
-    ln -sf "$plugin" ~/.config/sketchybar/plugins/
+    safe_symlink "$plugin" ~/.config/sketchybar/plugins/$(basename "$plugin")
   done
 elif [[ -d "$SB_BREW_DIR" ]]; then
   # Symlink default Homebrew configuration to prevent stale copies
-  ln -sf "$SB_BREW_DIR/sketchybarrc" ~/.config/sketchybar/sketchybarrc
+  safe_symlink "$SB_BREW_DIR/sketchybarrc" ~/.config/sketchybar/sketchybarrc
   for plugin in "$SB_BREW_DIR/plugins/"*; do
-    ln -sf "$plugin" ~/.config/sketchybar/plugins/
+    safe_symlink "$plugin" ~/.config/sketchybar/plugins/$(basename "$plugin")
   done
 fi
 
@@ -45,7 +45,7 @@ chmod +x ~/.config/sketchybar/plugins/*.sh 2>/dev/null || true
 echo "# # Configuring JankyBorders"
 mkdir -p ~/.config/borders
 if [[ -f "$YADR_DIR/workstation/macos/borders/bordersrc" ]]; then
-  ln -sf "$YADR_DIR/workstation/macos/borders/bordersrc" ~/.config/borders/bordersrc
+  safe_symlink "$YADR_DIR/workstation/macos/borders/bordersrc" ~/.config/borders/bordersrc
   chmod +x ~/.config/borders/bordersrc 2>/dev/null || true
 fi
 
@@ -60,7 +60,7 @@ bash "$YADR_DIR/workstation/macos/scripts/theme-switch.sh" auto
 
 echo "# # Installing automatic theme watcher"
 mkdir -p ~/Library/LaunchAgents
-cp "$YADR_DIR/workstation/macos/scripts/com.yadrlite.theme-watcher.plist" ~/Library/LaunchAgents/
+safe_symlink "$YADR_DIR/workstation/macos/scripts/com.yadrlite.theme-watcher.plist" ~/Library/LaunchAgents/com.yadrlite.theme-watcher.plist
 launchctl unload ~/Library/LaunchAgents/com.yadrlite.theme-watcher.plist 2>/dev/null || true
 launchctl load ~/Library/LaunchAgents/com.yadrlite.theme-watcher.plist
 echo "  Theme system installed with automatic light/dark mode switching!"
@@ -111,6 +111,9 @@ echo ""
 
 if command -v aerospace &>/dev/null; then
   open -a AeroSpace
+elif command -v borders &>/dev/null; then
+  echo "  -> AeroSpace not detected. Starting standalone JankyBorders daemon..."
+  brew services start borders
 fi
 if command -v sketchybar &>/dev/null; then
   brew services start sketchybar

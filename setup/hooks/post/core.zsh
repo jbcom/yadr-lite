@@ -11,11 +11,9 @@ fi
 
 echo "# # Installing config files (kitty, nvim, ranger)"
 mkdir -p ~/.config
-mkdir -p "$YADR_DIR/backup/config" 2>/dev/null
 
 for cfile in "${YADR_CONFIG[@]}"; do
-  mv ~/.config/$cfile "$YADR_DIR/backup/config/$cfile" 2>/dev/null
-  cp -r "$YADR_DIR/workstation/$cfile" ~/.config/$cfile
+  safe_symlink "$YADR_DIR/workstation/$cfile" ~/.config/$cfile
 done
 find ~/.config -type d -exec chmod 0755 {} \;
 find ~/.config -type f -exec chmod 0644 {} \;

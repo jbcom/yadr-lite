@@ -20,3 +20,25 @@ sed_i() {
 get_shell_rc() {
   echo "$HOME/.zshrc"
 }
+
+# Creates a symlink, backing up or failing safely if a non-symlink file already exists
+safe_symlink() {
+  local target="$1"
+  local link_name="$2"
+
+  if [[ -e "$link_name" || -L "$link_name" ]]; then
+    if [[ "$FORCE" == "1" ]]; then
+      echo "  -> Force replacing existing path: $link_name"
+      rm -rf "$link_name"
+    else
+      # If it's already a symlink pointing to the right place, do nothing
+      if [[ -L "$link_name" && "$(readlink "$link_name")" == "$target" ]]; then
+        return 0
+      fi
+      echo "Warning: Path already exists and --force not specified. Skipping symlink: $link_name"
+      return 1
+    fi
+  fi
+
+  ln -s "$target" "$link_name"
+}

@@ -21,6 +21,7 @@ USE_ASDF=1
 USE_STARSHIP=1
 MIGRATE=0
 UPGRADE=0
+FORCE=0
 HAS_MACOS_FLAG=0
 HAS_LINUX_FLAG=0
 
@@ -38,6 +39,7 @@ for arg in "$@"; do
     --without-starship) USE_STARSHIP=0 ;;
     --migrate) MIGRATE=1 ;;
     --upgrade) UPGRADE=1 ;;
+    --force) FORCE=1 ;;
     --with-langs)
       FEATURES+=("langs")
       YADR_ASDF_LANGS+=("all")
@@ -189,7 +191,9 @@ reorder_feature_first "cli-legacy"
 reorder_feature_first "langs"
 
 export USE_ASDF
+export USE_STARSHIP
 export YADR_DYNAMIC_FONTS
+export FORCE
 
 # Generate .tool-versions file for ASDF
 TOOL_VERSIONS="$YADR_DIR/.tool-versions"

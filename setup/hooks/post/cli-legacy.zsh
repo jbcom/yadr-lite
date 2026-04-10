@@ -9,7 +9,8 @@ if [[ "$USE_STARSHIP" == "1" ]]; then
     curl -sS https://starship.rs/install.sh | sh -s -- -y -b ~/.local/bin >/dev/null
   fi
 
-  cp "$YADR_DIR/workstation/starship/starship.toml" ~/.config/starship.toml
+  mkdir -p ~/.config
+  safe_symlink "$YADR_DIR/workstation/starship/starship.toml" ~/.config/starship.toml
 
   if ! grep -q 'starship init zsh' "$SHELL_RC" 2>/dev/null; then
     echo '' >>"$SHELL_RC"
