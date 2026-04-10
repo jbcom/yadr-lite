@@ -11,19 +11,6 @@ fi
 
 echo "==> Configuring Global Packages & Tooling"
 
-# Install pnpm for secure package management
-if command -v npm &>/dev/null; then
-  if ! command -v pnpm &>/dev/null; then
-    npm install -g pnpm
-  fi
-
-  [ -s "$SHELL_RC" ] && source "$SHELL_RC"
-  pnpm setup
-  pnpm install -g grunt-cli gulp gulp-cli csslint typescript typescript-language-server intelephense yaml-lint eslint-plugin-toml eslint-plugin-markdown golangci-lint vscode-css-languageserver-bin js-beautify unified-language-server eslint emmet-ls babel-eslint typescript-lsp coffeescript coffeelint neovim
-else
-  echo "  -> Skipping Node.js tooling setup (npm not found)"
-fi
-
 # Go lang installs (now managed by brew/asdf, but we still need paths)
 export GOPATH="$HOME/go"
 export PATH="$GOPATH/bin:$PATH"
