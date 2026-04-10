@@ -49,3 +49,30 @@ if command -v starship &>/dev/null; then
 else
   export PROMPT="%F{yellow}[%F{cyan}%~%F{yellow}] %F{magenta}%n%F{green}@%m %F{blue}%d%f%b\n%F{yellow}~%# %f"
 fi
+
+# Modern UNIX Tool Aliases
+if command -v eza &>/dev/null; then
+  alias ls="eza --icons --group-directories-first"
+  alias ll="eza -lh --icons --group-directories-first"
+  alias la="eza -aH --icons --group-directories-first"
+fi
+
+if command -v bat &>/dev/null; then
+  alias cat="bat --style=plain --paging=never"
+fi
+
+if command -v bottom &>/dev/null; then
+  alias top="btm"
+fi
+
+if command -v du-dust &>/dev/null; then
+  alias du="dust"
+fi
+
+# Better git diffs with Delta
+if command -v delta &>/dev/null; then
+  git config --global core.pager "delta"
+  git config --global interactive.diffFilter "delta --color-only"
+  git config --global delta.navigate true
+  git config --global merge.conflictstyle zdiff3
+fi
