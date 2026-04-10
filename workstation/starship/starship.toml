@@ -1,12 +1,12 @@
-# Josean-dev Powerlevel10k style prompt for Starship
-# Two-line prompt with box drawing connectors
-# Compatible with omarchy-theme-sync
+# YADRLite Bracketed Starship Configuration
+# Highly-optimized information density with box drawing connectors
+# Compatible with omarchy-theme-sync palette
 
-# Palette set by omarchy-theme-sync
+"$schema" = 'https://starship.rs/config-schema.json'
 palette = 'seashells'
 
 format = """
-[╭─](bright-black) $username[@](at)$hostname $directory$git_branch$git_state$git_status$git_metrics$docker_context$aws$gcloud$azure$nodejs$golang$python$ruby$php$rust$fill$memory_usage$battery$time
+[╭─](bright-black) $username$hostname$directory$git_branch$git_state$git_status$git_metrics$docker_context$aws$gcloud$azure$terraform$nodejs$golang$python$ruby$php$rust$bun$fill$memory_usage$battery$time
 [╰─](bright-black)$jobs$character"""
 
 add_newline = true
@@ -16,64 +16,31 @@ success_symbol = "[❯](green)"
 error_symbol = "[❯](red)"
 format = "$symbol "
 
-[jobs]
-symbol = "✦ "
-format = "[$symbol$number]($style) "
-style = "bold blue"
-
-[git_state]
-format = "[$state( $progress_current/$progress_total)]($style) "
-style = "bright-black"
-
-[git_metrics]
-disabled = false
-format = "([+$added]($added_style))([-$deleted]($deleted_style)) "
-added_style = "bold green"
-deleted_style = "bold red"
-
-[docker_context]
-format = "[  $context](blue bold) "
-only_with_files = false
-
-[aws]
-format = "[  $profile]($style) "
-style = "yellow bold"
-symbol = " "
-
-[gcloud]
-format = "[ 󱇶 $project]($style) "
-style = "bold blue"
-
-[azure]
-format = "[ 󰠅 $subscription]($style) "
-style = "blue bold"
-disabled = false
-
 [username]
 style_user = "user"
 style_root = "red bold"
-format = "[$user]($style)"
+format = '\[[$user]($style)\]'
 show_always = true
 
 [hostname]
 style = "host"
-format = "[$hostname]($style)"
+format = '\[[$hostname]($style)\] '
 ssh_only = false
 
 [directory]
-format = "[󰉋 $path]($style) "
+format = '\[[󰉋 $path]($style)\] '
 style = "path"
 truncation_length = 3
 truncate_to_repo = false
 home_symbol = "~"
 
 [git_branch]
-format = "[ $branch]($style) "
+format = '\[[$symbol$branch]($style)\]'
 style = "git"
 symbol = ""
 
 [git_status]
-format = "[$all_status$ahead_behind]($style)"
+format = '([\[$all_status$ahead_behind\]]($style))'
 style = "prompt"
 untracked = "?"
 modified = "!"
@@ -86,38 +53,75 @@ behind = "⇣"
 diverged = "⇕"
 conflicted = "="
 
+[git_state]
+format = '\[[$state ($progress_current/$progress_total)]($style)\]'
+style = "bright-black"
+
+[git_metrics]
+disabled = false
+format = '\[[+$added]($added_style)\]\[[-$deleted]($deleted_style)\]'
+added_style = "bold green"
+deleted_style = "bold red"
+
+[jobs]
+symbol = "✦ "
+format = '\[[$symbol$number]($style)\]'
+style = "bold blue"
+
+[docker_context]
+format = '\[[$symbol$context]($style)\]'
+only_with_files = false
+
+[aws]
+format = '\[[$symbol($profile)(\($region\))]($style)\]'
+style = "yellow bold"
+symbol = " "
+
+[gcloud]
+format = '\[[$symbol$account(@$domain)(\($region\))]($style)\]'
+style = "bold blue"
+
+[azure]
+format = '\[[$symbol$subscription]($style)\]'
+style = "blue bold"
+disabled = false
+
+[terraform]
+format = '\[[$symbol$workspace]($style)\]'
+
 [nodejs]
-format = " [ $version](bold green) "
+format = '\[[$symbol($version)]($style)\]'
+style = "bold green"
 detect_files = ["package.json", ".node-version", ".nvmrc"]
-detect_folders = ["node_modules"]
 
 [python]
-format = " [ $version](yellow) "
-detect_files = ["requirements.txt", ".python-version", "Pipfile", "pyproject.toml", "setup.py"]
+format = '\[[${symbol}${pyenv_prefix}(${version})(\($virtualenv\))]($style)\]'
+style = "yellow"
 
 [golang]
-format = " [ $version](bold cyan) "
-detect_files = ["go.mod", "go.sum", ".go-version"]
-detect_folders = ["Godeps"]
+format = '\[[$symbol($version)]($style)\]'
+style = "bold cyan"
 
 [ruby]
-format = " [ $version](bold red) "
-detect_files = ["Gemfile", ".ruby-version"]
-detect_folders = []
+format = '\[[$symbol($version)]($style)\]'
+style = "bold red"
 
 [php]
-format = " [ $version](89) "
-detect_files = ["composer.json", ".php-version"]
+format = '\[[$symbol($version)]($style)\]'
+style = "89"
 
 [rust]
-format = " [ $version](bold red) "
-detect_files = ["Cargo.toml"]
+format = '\[[$symbol($version)]($style)\]'
+style = "bold red"
+
+[bun]
+format = '\[[$symbol($version)]($style)\]'
 
 [battery]
 full_symbol = "🔋 "
 charging_symbol = "⚡️ "
 discharging_symbol = "🔌 "
-format = " [$symbol$percentage]($style) "
+format = '\[[$symbol$percentage]($style)\]'
 
 [[battery.display]]
 threshold = 20
@@ -128,7 +132,7 @@ disabled = false
 threshold = -1
 symbol = "󰍛 "
 style = "bold dimmed white"
-format = "[$symbol${ram}( | ${swap})]($style) "
+format = '\[$symbol[$ram( | $swap)]($style)\]'
 
 [fill]
 symbol = " ·"
@@ -136,16 +140,17 @@ style = "bright-black"
 
 [time]
 disabled = false
-format = "[󰥔 $time]($style)"
+format = '\[[$time]($style)\]'
 style = "time"
 time_format = "%I:%M:%S %p"
 
-# Right prompt for execution time (Zsh)
-right_format = """$cmd_duration"""
-
 [cmd_duration]
 min_time = 2000
-format = "[ﱣ $duration](bold yellow)"
+format = '\[[⏱ $duration]($style)\]'
+style = "bold yellow"
+
+# Right prompt for execution time (Zsh)
+right_format = """$cmd_duration"""
 
 # Continuation prompt (Zsh)
 continuation_prompt = "[▶▶ ](bright-black)"
