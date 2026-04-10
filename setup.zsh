@@ -25,11 +25,11 @@ HAS_LINUX_FLAG=0
 
 for arg in "$@"; do
   case $arg in
-    --macos) 
+    --macos)
       OS_OVERRIDE="Darwin"
       HAS_MACOS_FLAG=1
       ;;
-    --linux) 
+    --linux)
       OS_OVERRIDE="Linux"
       HAS_LINUX_FLAG=1
       ;;
@@ -39,7 +39,6 @@ for arg in "$@"; do
     --with-langs)
       FEATURES+=("langs")
       YADR_ASDF_LANGS+=("all")
-      ;;
       ;;
     --with-lang-*)
       FEATURES+=("langs")
@@ -53,13 +52,22 @@ for arg in "$@"; do
       FEATURES+=("tiling-wm")
       ;;
     --with-*) FEATURES+=("${arg#--with-}") ;;
-    setup|help) ;;
+    setup | help) ;;
     *)
       # Alias backward compatibility
       if [[ "$arg" != -* ]]; then
-        if [[ "$arg" == "macos" ]]; then OS_OVERRIDE="Darwin"; FEATURES+=("macos" "tiling-wm"); fi
-        if [[ "$arg" == "omarchy" || "$arg" == "linux" ]]; then OS_OVERRIDE="Linux"; FEATURES+=("linux" "tiling-wm"); fi
-        if [[ "$arg" == "tools" ]]; then FEATURES+=("langs"); YADR_ASDF_LANGS+=("all"); fi
+        if [[ "$arg" == "macos" ]]; then
+          OS_OVERRIDE="Darwin"
+          FEATURES+=("macos" "tiling-wm")
+        fi
+        if [[ "$arg" == "omarchy" || "$arg" == "linux" ]]; then
+          OS_OVERRIDE="Linux"
+          FEATURES+=("linux" "tiling-wm")
+        fi
+        if [[ "$arg" == "tools" ]]; then
+          FEATURES+=("langs")
+          YADR_ASDF_LANGS+=("all")
+        fi
         if [[ "$arg" == "keyboard" ]]; then FEATURES+=("keyboard"); fi
         if [[ "$arg" == "gnu" || "$arg" == "linuxify" ]]; then FEATURES+=("gnu"); fi
         if [[ "$arg" == "update" || "$arg" == "upgrade" ]]; then UPGRADE=1; fi
@@ -105,7 +113,7 @@ if [[ "$UPGRADE" == "1" ]]; then
   echo "==> Updating YADRLite repository..."
   cd "$YADR_DIR"
   git pull --rebase
-  
+
   echo "==> Updating tmux plugins..."
   mkdir -p "$YADR_DIR/tmux/plugin"
   for tplug in "${YADR_TMUX_PLUGINS[@]}"; do
@@ -145,7 +153,7 @@ if [[ "$OS_LOWER" == "darwin" ]]; then OS_LOWER="macos"; fi
 # Core CLI Tools are always present
 
 # Language fallback path for --without-asdf
-if (( ${FEATURES[(Ie)langs]} )) && [[ "$USE_ASDF" == "0" ]]; then
+if ((${FEATURES[(Ie)langs]})) && [[ "$USE_ASDF" == "0" ]]; then
   FEATURES+=("nvm" "golang-legacy" "python-legacy" "php-legacy")
 fi
 
@@ -154,7 +162,7 @@ FEATURES=("${(@u)FEATURES}")
 
 reorder_feature_first() {
   local target_feat="$1"
-  if (( ${FEATURES[(Ie)$target_feat]} )); then
+  if ((${FEATURES[(Ie)$target_feat]})); then
     FEATURES=("$target_feat" "${FEATURES[@]:#$target_feat}")
   fi
 }
@@ -178,21 +186,21 @@ touch "$TOOL_VERSIONS"
 if [[ "$USE_ASDF" == "1" ]]; then
   for req in "${YADR_ASDF_LANGS[@]}"; do
     if [[ "$req" == "all" ]]; then
-      echo "nodejs latest\npython latest\nruby latest\ngolang latest\nphp latest" >> "$TOOL_VERSIONS"
+      echo "nodejs latest\npython latest\nruby latest\ngolang latest\nphp latest" >>"$TOOL_VERSIONS"
     elif [[ "$req" =~ ^([a-zA-Z0-9_]+)-(.+)$ ]]; then
       lang="${match[1]}"
       ver="${match[2]}"
       [[ "$lang" == "node" ]] && lang="nodejs"
       [[ "$lang" == "go" ]] && lang="golang"
-      echo "$lang $ver" >> "$TOOL_VERSIONS"
+      echo "$lang $ver" >>"$TOOL_VERSIONS"
     else
       lang="$req"
       [[ "$lang" == "node" ]] && lang="nodejs"
       [[ "$lang" == "go" ]] && lang="golang"
-      echo "$lang latest" >> "$TOOL_VERSIONS"
+      echo "$lang latest" >>"$TOOL_VERSIONS"
     fi
   done
-  
+
   if [[ -s "$TOOL_VERSIONS" ]]; then
     sort -u "$TOOL_VERSIONS" -o "$TOOL_VERSIONS"
   fi
@@ -258,7 +266,7 @@ if [[ "$MIGRATE" == "1" && "$INSTALLED_VERSION" != "$CURRENT_VERSION" ]]; then
       fi
     fi
   done
-  echo "$CURRENT_VERSION" > "$YADR_DIR/.installed_version"
+  echo "$CURRENT_VERSION" >"$YADR_DIR/.installed_version"
   echo "==> Migration complete!"
 fi
 
