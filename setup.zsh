@@ -18,10 +18,8 @@ typeset -a FEATURES=()
 typeset -a YADR_ASDF_LANGS=()
 typeset -a YADR_DYNAMIC_FONTS=()
 USE_ASDF=1
-USE_STARSHIP=1
 MIGRATE=0
 UPGRADE=0
-FORCE=0
 HAS_MACOS_FLAG=0
 HAS_LINUX_FLAG=0
 
@@ -36,13 +34,12 @@ for arg in "$@"; do
       HAS_LINUX_FLAG=1
       ;;
     --without-asdf) USE_ASDF=0 ;;
-    --without-starship) USE_STARSHIP=0 ;;
     --migrate) MIGRATE=1 ;;
     --upgrade) UPGRADE=1 ;;
-    --force) FORCE=1 ;;
     --with-langs)
       FEATURES+=("langs")
       YADR_ASDF_LANGS+=("all")
+      ;;
       ;;
     --with-lang-*)
       FEATURES+=("langs")
@@ -146,20 +143,10 @@ OS_LOWER="${(L)OS}"
 if [[ "$OS_LOWER" == "darwin" ]]; then OS_LOWER="macos"; fi
 
 # Core CLI Tools are always present
-if [[ "$USE_STARSHIP" == "1" ]]; then
-  FEATURES+=("starship")
-fi
 
 # Language fallback path for --without-asdf
 if (( ${FEATURES[(Ie)langs]} )) && [[ "$USE_ASDF" == "0" ]]; then
   FEATURES+=("nvm" "golang-legacy" "python-legacy" "php-legacy")
-fi
-
-# Enforce Font Dependency for Starship
-if [[ "$USE_STARSHIP" == "1" ]]; then
-  if (( ! ${FEATURES[(Ie)fonts]} )) && (( ! ${FEATURES[(Ie)dynamic-font]} )); then
-    FEATURES+=("fonts")
-  fi
 fi
 
 # Deduplicate features and reorder
@@ -174,7 +161,6 @@ reorder_feature_first() {
 
 reorder_feature_first "fonts"
 reorder_feature_first "dynamic-font"
-reorder_feature_first "starship"
 reorder_feature_first "nvm"
 reorder_feature_first "golang-legacy"
 reorder_feature_first "python-legacy"
@@ -182,7 +168,6 @@ reorder_feature_first "php-legacy"
 reorder_feature_first "langs"
 
 export USE_ASDF
-export USE_STARSHIP
 export YADR_DYNAMIC_FONTS
 export FORCE
 

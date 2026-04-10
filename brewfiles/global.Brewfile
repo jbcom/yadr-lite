@@ -12,3 +12,7 @@ brew "lazygit"
 brew "glow"
 brew "gitleaks"
 brew "zoxide"
+brew "starship"
+if OS.mac?
+  cask "font-hack-nerd-font"
+end
