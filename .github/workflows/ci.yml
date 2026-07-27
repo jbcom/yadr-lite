@@ -33,6 +33,19 @@ jobs:
             brew install shellcheck zsh
           fi
 
+      # This project's setup.zsh/brewfiles/*.Brewfile flow is built
+      # directly on Homebrew, including on Linux (Linuxbrew) — the
+      # top-level "runs setup when no arguments are provided" spec
+      # below exercises the real script and needs a working `brew` on
+      # PATH. ubuntu-latest carries no Homebrew by default (unlike
+      # macos-latest, which ships it preinstalled).
+      - name: Install Homebrew (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          echo "/home/linuxbrew/.linuxbrew/bin" >> "$GITHUB_PATH"
+          echo "/home/linuxbrew/.linuxbrew/sbin" >> "$GITHUB_PATH"
+
       - name: Run Zsh Syntax Checks
         run: |
           mapfile -d '' zsh_files < <(find setup -name '*.zsh' -print0)
