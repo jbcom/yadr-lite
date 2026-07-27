@@ -22,7 +22,7 @@ Requirements: [git](https://git-scm.com/downloads)
 1. **Bootstrap the environment:**
 This single command installs Homebrew (if missing), updates Git and Zsh, sets your default shell, and clones the repository.
 ```sh
-/bin/sh -c "`curl -fsSL https://raw.githubusercontent.com/odysseyalive/dotfiles/master/install.sh`"
+/bin/sh -c "`curl -fsSL https://raw.githubusercontent.com/jbcom/yadr-lite/master/install.sh`"
 ```
 
 2. **Install Development Tools:**
@@ -107,7 +107,7 @@ Restores your original `~/.bashrc`, `~/.zshrc`, and other configs to their pre-Y
 **Uninstall and Restore (Remote):**
 If your local directory is broken or deleted, you can uninstall remotely:
 ```sh
-/bin/sh -c "`curl -fsSL https://raw.githubusercontent.com/odysseyalive/dotfiles/master/uninstall.sh`"
+/bin/sh -c "`curl -fsSL https://raw.githubusercontent.com/jbcom/yadr-lite/master/uninstall.sh`"
 ```
 
 *Note: To violently remove all Homebrew packages managed by YADRLite as well, pass the `--all` and `--force` flags to the uninstaller.*

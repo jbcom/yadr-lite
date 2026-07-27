@@ -20,8 +20,13 @@ fi
 echo "==> Setting up languages via ASDF"
 
 # Sort and deduplicate the tool-versions file, filtering out comments and empties
-grep -v '^\s*#' "$TOOL_VERSIONS_FILE" | grep -v '^\s*$' | sort -u >"$TOOL_VERSIONS_FILE.tmp"
-mv "$TOOL_VERSIONS_FILE.tmp" "$TOOL_VERSIONS_FILE"
+if grep -v '^\s*#' "$TOOL_VERSIONS_FILE" | grep -v '^\s*$' | sort -u >"$TOOL_VERSIONS_FILE.tmp"; then
+  mv "$TOOL_VERSIONS_FILE.tmp" "$TOOL_VERSIONS_FILE"
+else
+  echo "Error: Failed to process .tool-versions file" >&2
+  rm -f "$TOOL_VERSIONS_FILE.tmp"
+  exit 1
+fi
 
 while read -r lang ver; do
   [[ -z "$lang" || -z "$ver" ]] && continue

@@ -23,7 +23,7 @@ echo "# # # # # # # # # # # # # # # # # # # # # #"
 if [ -d "$dir/.git" ]; then
   echo ""
   echo "YADRLite is already installed in $dir."
-  echo "Use ~/.yadrlite/setup.sh to manage your installation."
+  echo "Use ~/.yadrlite/setup.zsh to manage your installation."
   exit 0
 fi
 
@@ -69,7 +69,7 @@ if ! command -v git >/dev/null 2>&1; then
 fi
 
 # We are bootstrapping from curl, clone the repo
-git clone https://github.com/odysseyalive/dotfiles.git "$dir"
+git clone https://github.com/jbcom/yadr-lite.git "$dir"
 
 echo "# # Backing up current configurations"
 echo "# # # # # # # # # # # # # # # # # # # # # #"
@@ -141,11 +141,11 @@ echo ""
 echo "The dotfiles are installed!"
 echo ""
 echo "Next steps:"
-echo "  1. Install development tools:  zsh ~/.yadrlite/setup.sh tools"
+echo "  1. Install development tools:  zsh ~/.yadrlite/setup.zsh tools"
 echo "  2. Restart your terminal (now using Zsh!)"
 echo ""
 echo "Optional setups:"
-echo "  macOS workstation:     zsh ~/.yadrlite/setup.sh macos"
-echo "  Omarchy (Arch) setup:  zsh ~/.yadrlite/setup.sh omarchy"
-echo "  Swap CapsLock/Escape:  zsh ~/.yadrlite/setup.sh keyboard"
+echo "  macOS workstation:     zsh ~/.yadrlite/setup.zsh macos"
+echo "  Omarchy (Arch) setup:  zsh ~/.yadrlite/setup.zsh omarchy"
+echo "  Swap CapsLock/Escape:  zsh ~/.yadrlite/setup.zsh keyboard"
 echo ""

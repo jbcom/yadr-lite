@@ -120,7 +120,7 @@ fi
 
 if [[ "$UPGRADE" == "1" ]]; then
   echo "==> Updating YADRLite repository..."
-  cd "$YADR_DIR"
+  cd "$YADR_DIR" || exit 1
   git pull --rebase
 
   echo "==> Updating tmux plugins..."
@@ -163,6 +163,7 @@ if [[ "$OS_LOWER" == "darwin" ]]; then OS_LOWER="macos"; fi
 
 # Language fallback path for --without-asdf
 if ((${FEATURES[(Ie)langs]})) && [[ "$USE_ASDF" == "0" ]]; then
+  FEATURES=("${FEATURES[@]:#langs}")
   FEATURES+=("nvm" "golang-legacy" "python-legacy" "php-legacy")
 fi
 
@@ -195,7 +196,7 @@ touch "$TOOL_VERSIONS"
 if [[ "$USE_ASDF" == "1" ]]; then
   for req in "${YADR_ASDF_LANGS[@]}"; do
     if [[ "$req" == "all" ]]; then
-      echo "python latest\nruby latest\ngolang latest\nphp latest" >> "$TOOL_VERSIONS"
+      printf 'python latest\nruby latest\ngolang latest\nphp latest\n' >> "$TOOL_VERSIONS"
     elif [[ "$req" =~ ^([a-zA-Z0-9_]+)-(.+)$ ]]; then
       lang="${match[1]}"
       ver="${match[2]}"

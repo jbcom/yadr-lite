@@ -1,6 +1,12 @@
 #!/usr/bin/env zsh
 setopt nullglob
 
+# NOTE: this is a deliberate, documented exception to this project's
+# Homebrew-only package policy (see AGENTS.md). i3/i3-gaps has no
+# Homebrew/Linuxbrew formula — X11 window managers depend on system
+# X11/Wayland libraries that Linuxbrew does not bottle — so there is
+# no Brewfile-based path to install it on Linux. macOS still routes
+# through `brew install --cask` as normal.
 if [[ "$(uname -s)" == "Darwin" ]]; then
   echo "==> Installing AeroSpace (macOS)..."
   brew install --cask nikitabobko/tap/aerospace
