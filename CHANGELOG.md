@@ -113,6 +113,8 @@ All notable changes to this project will be documented in this file.
 
 - Remove old tools.sh and update paths for ASDF and NVM integration
 
+- Update generated artifacts (changelog, demo gif) [skip ci]
+
 
 ### Refactoring
 
