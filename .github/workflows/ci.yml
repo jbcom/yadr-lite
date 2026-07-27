@@ -35,8 +35,8 @@ jobs:
 
       - name: Run Zsh Syntax Checks
         run: |
-          setopt extended_glob
-          zsh -n setup.zsh setup/*.sh setup/**/*.zsh
+          mapfile -d '' zsh_files < <(find setup -name '*.zsh' -print0)
+          zsh -n setup.zsh setup/*.sh "${zsh_files[@]}"
 
       - name: Run ShellCheck on install.sh
         run: |
