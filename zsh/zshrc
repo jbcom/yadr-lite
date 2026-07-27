@@ -1,0 +1,97 @@
+# list colorfix
+alias ls='ls --color=auto'
+export LS_COLORS=
+
+# offers the widest compatibility on remote access
+if [[ -n "$INSIDE_EMACS" ]]; then
+    export TERM='eterm-color'
+else
+    export TERM='xterm-256color'
+fi
+
+# make sure we have a tmp dir for CoC
+export TMPDIR="/tmp"
+
+# default to nvim if installed
+if [ ! -x "$(command -v nvim)" ]; then
+  alias vi="$(which vim)"
+  export EDITOR='vi'
+else
+  alias vi="$(which nvim)"
+  alias vim="$(which nvim)"
+  export EDITOR='nvim'
+fi
+
+# nnn (cd on quit)
+n() {
+    # Block nesting of nnn in subshells
+    [ "${NNNLVL:-0}" -eq 0 ] || {
+        echo "nnn is already running"
+        return
+    }
+
+    export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+    
+    command nnn "$@"
+
+    [ ! -f "$NNN_TMPFILE" ] || {
+        . "$NNN_TMPFILE"
+        rm -f "$NNN_TMPFILE" > /dev/null
+    }
+}
+
+# Go paths
+export GOPATH="$HOME/go"
+export PATH="$GOPATH/bin:$PATH"
+
+# Enable ASDF Version Manager
+if [ -f "$(brew --prefix asdf 2>/dev/null)/libexec/asdf.sh" ]; then
+  source "$(brew --prefix asdf 2>/dev/null)/libexec/asdf.sh"
+fi
+
+# Enable zoxide (smart cd)
+if command -v zoxide &>/dev/null; then
+  eval "$(zoxide init zsh)"
+fi
+
+# Enable Starship Prompt
+if command -v starship &>/dev/null; then
+  eval "$(starship init zsh)"
+else
+  export PROMPT="%F{yellow}[%F{cyan}%~%F{yellow}] %F{magenta}%n%F{green}@%m %F{blue}%d%f%b\n%F{yellow}~%# %f"
+fi
+
+# Modern UNIX Tool Aliases
+if command -v eza &>/dev/null; then
+  alias ls="eza --icons --group-directories-first"
+  alias ll="eza -lh --icons --group-directories-first"
+  alias la="eza -aH --icons --group-directories-first"
+fi
+
+if command -v bat &>/dev/null; then
+  alias cat="bat --style=plain --paging=never"
+fi
+
+if command -v bottom &>/dev/null; then
+  alias top="btm"
+fi
+
+if command -v du-dust &>/dev/null; then
+  alias du="dust"
+fi
+
+if command -v ncdu &>/dev/null; then
+  alias diskspace="ncdu"
+fi
+
+if command -v rmlint &>/dev/null; then
+  alias dedup="rmlint"
+fi
+
+# Better git diffs with Delta
+if command -v delta &>/dev/null; then
+  git config --global core.pager "delta"
+  git config --global interactive.diffFilter "delta --color-only"
+  git config --global delta.navigate true
+  git config --global merge.conflictstyle zdiff3
+fi

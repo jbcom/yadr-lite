@@ -5,6 +5,11 @@
 # Start AeroSpace at login
 start-at-login = true
 
+# Run commands on startup
+after-startup-command = [
+  'exec-and-forget borders'
+]
+
 # Normalizations
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true

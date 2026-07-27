@@ -1,0 +1,6 @@
+cask "ghostty"
+cask "iterm2"
+cask "font-hack-nerd-font"
+brew "sketchybar"
+brew "borders"
+brew "duti"
